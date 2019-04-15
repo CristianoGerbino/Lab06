@@ -1,15 +1,19 @@
 package it.polito.tdp.meteo.bean;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.time.*;
 
 public class Citta {
 
 	private String nome;
 	private List<Rilevamento> rilevamenti;
-	private int counter = 0;
+	private int giorniConsecutivi = 0;
+	private int giorniTotali = 0;
 	
 	public Citta(String nome) {
 		this.nome = nome;
+		rilevamenti = new LinkedList<Rilevamento>();
 	}
 	
 	public Citta(String nome, List<Rilevamento> rilevamenti) {
@@ -25,6 +29,23 @@ public class Citta {
 		this.nome = nome;
 	}
 
+	public int getGiorniConsecutivi() {
+		return giorniConsecutivi;
+	}
+
+	public int getGiorniTotali() {
+		return giorniTotali;
+	}
+
+	public void incrementaGiorniConsecutivi() {
+		this.giorniConsecutivi++;
+	}
+	
+	
+	public void incrementaGiorniTotali() {
+		this.giorniTotali++;
+	}
+	
 	public List<Rilevamento> getRilevamenti() {
 		return rilevamenti;
 	}
@@ -32,17 +53,15 @@ public class Citta {
 	public void setRilevamenti(List<Rilevamento> rilevamenti) {
 		this.rilevamenti = rilevamenti;
 	}
-
-	public int getCounter() {
-		return counter;
-	}
-
-	public void setCounter(int counter) {
-		this.counter = counter;
-	}
 	
-	public void increaseCounter() {
-		this.counter += 1;
+	
+	public double getUmiditaPerGiorno (int mese, int giorno) {
+		for (Rilevamento r : rilevamenti) {
+			if ( r.getData().getMonthValue() == mese && r.getData().getDayOfMonth() == giorno) {
+				return r.getUmidita();
+			}
+		}
+		return 0.0;
 	}
 
 	@Override
@@ -74,5 +93,23 @@ public class Citta {
 	public String toString() {
 		return nome;
 	}
+	
+	public String stampati() {
+		String s = "";
+		for (Rilevamento r : this.rilevamenti) {
+			s+= r.toString()+" ";
+		}
+		return s;
+	}
+
+	public void resetGiorniConsecutivi() {
+		this.giorniConsecutivi = 0;
+	}
+
+	public void decrementaGiorniTotali() {
+		this.giorniTotali--;
+	}
+
+	
 	
 }
